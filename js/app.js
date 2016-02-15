@@ -1,7 +1,8 @@
-function getPixelX(x) { 
+function getPixelX(x) {
     var pixX = (x * 101);
     return pixX;
 }
+
 function getPixelY(y) {
     var pixY = (y * 85) - 27;
     return pixY;
@@ -16,8 +17,8 @@ function getRandomInt(min, max) {
  * Enemies our player must avoid
  * @param {number} x - The enemy's initial x coordinate
  * @param {number} y - The enemy's initial y coordinate
-*/
-var Enemy = function (x, y) {
+ */
+var Enemy = function(x, y) {
     this.speed = this.setSpeed(getRandomInt(1, 3));
     this.sprite = 'images/enemy-bug.png';
     this.x = getPixelX(x);
@@ -26,8 +27,8 @@ var Enemy = function (x, y) {
 /*
  * Sets an enemies speed. Abstracting this function both keeps the constructor clean and allows for the potential of changing an enemies speed midgame.
  * @param {number} speed - An int that indicates how fast the enemy should go. Acceptable values are 1, 2, and 3.
-*/
-Enemy.prototype.setSpeed = function (speed) {
+ */
+Enemy.prototype.setSpeed = function(speed) {
     // Sanitize input by ensuring it as in int, then clamp it between 1 and 3.
     speed = Math.floor(speed);
     speed = (speed < 1) ? 1 : speed;
@@ -45,59 +46,64 @@ Enemy.prototype.setSpeed = function (speed) {
 /*
  * Update the enemy's position, required method for game
  * @param {number} dt - A time delta between ticks. 
-*/
-Enemy.prototype.update = function (dt) {
+ */
+Enemy.prototype.update = function(dt) {
     this.x += dt * getPixelX(this.speed);
-    if (this.x >= getPixelX(5))
+    if (this.x >= getPixelX(5)) {
         this.x = getPixelX(-1);
+    }
+    if (((player.x >= this.x) && (player.x <= this.x + 101)) && ((player.y >= this.y - 40) && (player.y <= this.y +40))) {
+        console.log("collision");
+        player.x = getPixelX(2);
+        player.y = getPixelY(5);
+    }
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
 };
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function () {
+var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = getPixelX(2);
     this.y = getPixelY(5);
 };
-Player.prototype.update = function () {
-    //TODO: Write this function
-    
-};
-Player.prototype.render = function () {
+Player.prototype.update = function() {};
+Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-Player.prototype.handleInput = function (key) {
-    //TODO: Write this function
-    console.log(key);
-    if (key === 'up') {
-        player.y -= getPixelY(1.3);
-    };
-    if (key === 'down') {
-        player.y += getPixelY(1.3);
-    };
-    if (key === 'left') {
-        player.x -= getPixelX(1);
-    };
-    if (key === 'right') {
-        player.x += getPixelX(1);
-    };
+Player.prototype.handleInput = function(key) {
+    if (key === 'up')
+        if (player.y >= getPixelY(1))
+            player.y -= getPixelY(1.3);
+    if (key === 'down')
+    // The .1 is a fudge as my getPixelY is off some pixels
+        if (player.y <= getPixelY(4.1))
+            player.y += getPixelY(1.3);
+    if (key === 'left')
+        if (player.x >= getPixelX(1))
+            player.x -= getPixelX(1);
+    if (key === 'right')
+        if (player.x <= getPixelX(3))
+            player.x += getPixelX(1);
 };
-
 
 var player = new Player();
 var allEnemies = [
     new Enemy(-1, 1),
-    new Enemy(-1, 3),    new Enemy(-1, 1),
-    new Enemy(-1, 3),    new Enemy(-1, 1),
-    new Enemy(-1, 3),    new Enemy(-1, 1),
-    new Enemy(-1, 3),    new Enemy(-1, 1),
-    new Enemy(-1, 3)
+    new Enemy(-1, 2),
+    new Enemy(-1, 3),
+    new Enemy(-2, 1),
+    new Enemy(-2, 2),
+    new Enemy(-2, 3),
+    new Enemy(-3, 1),
+    new Enemy(-3, 2),
+    new Enemy(-3, 3),
 ];
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -118,6 +124,5 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         68: 'right'
     };
-    console.log(e);
     player.handleInput(allowedKeys[e.keyCode]);
 });
