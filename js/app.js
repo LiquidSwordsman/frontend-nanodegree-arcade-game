@@ -52,10 +52,17 @@ Enemy.prototype.update = function(dt) {
     if (this.x >= getPixelX(5)) {
         this.x = getPixelX(-1);
     }
-    if (((player.x >= this.x) && (player.x <= this.x + 101)) && ((player.y >= this.y - 40) && (player.y <= this.y +40))) {
-        console.log("collision");
-        player.x = getPixelX(2);
-        player.y = getPixelY(5);
+    // Give the player a little bit of leeway with enemy hitboxes.
+    if (((player.x >= this.x-50) && (player.x <= this.x + 80)) && ((player.y >= this.y - 40) && (player.y <= this.y + 40))) {
+        /* 
+         * Add a tenth of a second delay before the player is reset. Long 
+         * enough to see player move to new tile,but not long enough that 
+         * holding up arrow is an autowin. 
+         */
+        setTimeout(function() {
+            player.x = getPixelX(2);
+            player.y = getPixelY(5);
+        }, 100);
     }
 };
 
