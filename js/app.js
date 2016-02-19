@@ -1,15 +1,4 @@
-// This helper func converts a 0 based coordinate into a pixel X Coordinate.
-function getPixelX(x) {
-    var pixX = (x * 101);
-    return pixX;
-}
-
-// This helper func converts a 0 based coordinate into a pixel Y Coordinate.
-function getPixelY(y) {
-    var pixY = (y * 85) - 27;
-    return pixY;
-}
-
+"use strict";
 /*
  * Superclass with common functionality
  * @param {string} sprite - A string used to fetch the object's sprite
@@ -18,8 +7,8 @@ function getPixelY(y) {
  */
 var GameObject = function(sprite, x, y) {
     // Create locals to avoid calling the same func twice.
-    var pixelX = getPixelX(x);
-    var pixelY = getPixelY(y);
+    var pixelX = this.getPixelX(x);
+    var pixelY = this.getPixelY(y);
 
     this.sprite = sprite;
     this.initialX = pixelX;
@@ -39,6 +28,15 @@ GameObject.prototype.reset = function() {
     this.y = this.initialY;
 };
 
+// These helper func converts a 0 based coordinate into a pixel Coordinate.
+GameObject.prototype.getPixelX = function (x) {
+    var pixX = (x * 101);
+    return pixX;
+};
+GameObject.prototype.getPixelY = function (y) {
+    var pixY = (y * 85) - 27;
+    return pixY;
+};
 
 var Enemy = function(x, y, speed) {
     GameObject.call(this, 'images/enemy-bug.png', x, y);
@@ -50,8 +48,8 @@ Enemy.prototype.constructor = Enemy;
 
 // Update the enemy's position, required method for game
 Enemy.prototype.update = function(dt) {
-    this.x += dt * getPixelX(this.speed);
-    if (this.x >= getPixelX(5)) {
+    this.x += dt * this.getPixelX(this.speed);
+    if (this.x >= this.getPixelX(5)) {
         this.reset();
     }
     // Give the player a little bit of leeway with enemy hitboxes.
@@ -69,21 +67,21 @@ Player.prototype.constructor = Player;
 Player.prototype.update = function() {};
 Player.prototype.handleInput = function(key) {
     if (key === 'up')
-        if (player.y >= getPixelY(1)) {
-            player.y -= getPixelY(1.3);
-            if (player.y < getPixelY(1))
+        if (this.y >= this.getPixelY(1)) {
+            this.y -= this.getPixelY(1.3);
+            if (this.y < this.getPixelY(1))
                 this.reset();
         }
     if (key === 'down')
-    // The .1 is a fudge as my getPixelY is off some pixels
-        if (player.y <= getPixelY(4.1))
-            player.y += getPixelY(1.3);
+    // The .1 is a fudge as my this.getPixelY is off some pixels
+        if (this.y <= this.getPixelY(4.1))
+            this.y += this.getPixelY(1.3);
     if (key === 'left')
-        if (player.x >= getPixelX(1))
-            player.x -= getPixelX(1);
+        if (this.x >= this.getPixelX(1))
+            this.x -= this.getPixelX(1);
     if (key === 'right')
-        if (player.x <= getPixelX(3))
-            player.x += getPixelX(1);
+        if (this.x <= this.getPixelX(3))
+            this.x += this.getPixelX(1);
 };
 
 var player = new Player();
