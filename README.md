@@ -1,6 +1,6 @@
-frontend-nanodegree-arcade-game
+Frogger.js
 ===============================
 
-Students should use this [rubric](https://www.udacity.com/course/viewer/#!/c-nd001/l-2696458597/m-2687128535) for self-checking their submission.
+Frogger.js is a simple JavaScript clone of the classic arcade game Frogger. 
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+To run the game simply clone the repository and open index.html in your browser. A live version of the game as well as the author's contact information can be found at: http://www.liquidswords.ninja/frogger
